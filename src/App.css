@@ -1,0 +1,268 @@
+.app-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+}
+
+.page-header {
+  display: grid;
+  grid-template-columns: 1.5fr 0.9fr;
+  gap: 24px;
+  align-items: end;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(24, 55, 43, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 18px 45px var(--shadow);
+  padding: 28px;
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--forest-600);
+  margin-bottom: 12px;
+}
+
+.page-header h1 {
+  font-size: clamp(2rem, 2.8vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.06em;
+}
+
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-self: end;
+  width: min(100%, 420px);
+}
+
+.area-pill {
+  background: rgba(93, 144, 119, 0.16);
+  color: var(--forest-900);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 600;
+}
+
+.radius-picker {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.radius-button,
+.fetch-button {
+  border: 1px solid rgba(24, 55, 43, 0.12);
+  border-radius: 999px;
+  padding: 10px 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.radius-button {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--forest-900);
+}
+
+.radius-button.is-active {
+  background: var(--forest-700);
+  color: var(--white);
+  box-shadow: 0 10px 24px rgba(43, 90, 70, 0.25);
+}
+
+.fetch-button {
+  background: linear-gradient(135deg, var(--forest-600), var(--forest-900));
+  color: var(--white);
+  border: none;
+  font-weight: 700;
+}
+
+.fetch-button:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.site-note {
+  color: var(--forest-700);
+  margin: 18px 0 0;
+  font-weight: 600;
+}
+
+.error-banner {
+  margin-top: 18px;
+  background: rgba(154, 45, 45, 0.1);
+  border: 1px solid rgba(154, 45, 45, 0.25);
+  border-radius: 16px;
+  color: var(--danger);
+  padding: 14px 16px;
+  font-weight: 600;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(24, 55, 43, 0.06);
+  border-radius: 22px;
+  padding: 20px 18px;
+  box-shadow: 0 12px 30px rgba(24, 55, 43, 0.04);
+}
+
+.stat-card--green {
+  border-left: 5px solid var(--forest-600);
+}
+
+.stat-card--sand {
+  border-left: 5px solid var(--sand-400);
+}
+
+.stat-card--blue {
+  border-left: 5px solid #6f8aa1;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--forest-700);
+  margin-bottom: 12px;
+}
+
+.stat-value {
+  font-size: clamp(1.7rem, 2vw, 2.6rem);
+  letter-spacing: -0.06em;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 24px;
+  border: 1px solid rgba(24, 55, 43, 0.06);
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(24, 55, 43, 0.04);
+}
+
+.chart-card h2,
+.list-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 18px;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  color: var(--forest-700);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(93, 144, 119, 0.12);
+  overflow: hidden;
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--forest-500), var(--forest-700));
+  border-radius: inherit;
+}
+
+.bar-fill--sand {
+  background: linear-gradient(90deg, #c9b184, #a97f4f);
+}
+
+.bar-value {
+  font-weight: 700;
+  text-align: right;
+}
+
+.empty-state {
+  color: var(--forest-700);
+}
+
+.detail-panel {
+  margin-top: 18px;
+}
+
+.taxa-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.taxa-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  border-bottom: 1px solid rgba(24, 55, 43, 0.08);
+  padding-bottom: 10px;
+}
+
+.taxa-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rank {
+  font-size: 0.75rem;
+  color: var(--forest-600);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.scientific-name {
+  color: var(--forest-700);
+  font-size: 0.85rem;
+}
+
+.taxa-count {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--forest-700);
+}
+
+@media (max-width: 900px) {
+  .page-header,
+  .charts-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header-meta {
+    width: 100%;
+  }
+}
