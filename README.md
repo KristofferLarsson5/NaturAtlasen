@@ -25,7 +25,6 @@ Syftet med projektet är att göra det enkelt att se vilka arter och organismgru
 - TypeScript
 - Vite
 - CSS
-- npm
 - FinBIF OpenAPI
 
 ## 5. Datakällor
