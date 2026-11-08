@@ -3,6 +3,18 @@ import type { Observation, ObservationFeature } from '../types/observation'
 import { calculateDistanceKm } from '../utils/distance'
 
 const DEFAULT_LIMIT = 1000
+const FINBIF_ITEMS_URL = 'https://ogcapi.laji.fi/collections/lajiapi-connection/items'
+
+export function getFinbifSourceUrl(radiusMeters: number): string {
+  const params = new URLSearchParams({
+    bbox: buildBoundingBox(NABBEN.center.lat, NABBEN.center.lon, radiusMeters).join(','),
+    limit: String(DEFAULT_LIMIT),
+    offset: '0',
+    f: 'json',
+  })
+
+  return `${FINBIF_ITEMS_URL}?${params.toString()}`
+}
 
 function normalizeText(value: unknown): string | null {
   if (typeof value === 'string') {

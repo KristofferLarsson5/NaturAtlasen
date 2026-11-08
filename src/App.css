@@ -90,6 +90,12 @@
   font-weight: 600;
 }
 
+.site-note a {
+  color: var(--forest-900);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .error-banner {
   margin-top: 18px;
   background: rgba(154, 45, 45, 0.1);

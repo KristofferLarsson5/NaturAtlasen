@@ -5,7 +5,7 @@ import { StatCard } from './components/StatCard'
 import { TopTaxa } from './components/TopTaxa'
 import { YearChart } from './components/YearChart'
 import { NABBEN } from './data/locations'
-import { fetchFinbifObservations } from './services/finbif'
+import { fetchFinbifObservations, getFinbifSourceUrl } from './services/finbif'
 import type { Observation } from './types/observation'
 import { filterObservationsByRadius } from './utils/distance'
 import { calculateObservationStats } from './utils/statistics'
@@ -63,6 +63,7 @@ function getTopTaxa(observations: Observation[]) {
 function App() {
   const [selectedRadius, setSelectedRadius] = useState<number>(250)
   const [observations, setObservations] = useState<Observation[]>([])
+  const [fetchedRadius, setFetchedRadius] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -85,10 +86,12 @@ function App() {
   async function handleFetchData() {
     setLoading(true)
     setError(null)
+    setFetchedRadius(null)
 
     try {
       const nextObservations = await fetchFinbifObservations(selectedRadius)
       setObservations(nextObservations)
+      setFetchedRadius(selectedRadius)
     } catch (fetchError) {
       setObservations([])
       setError(
@@ -113,6 +116,9 @@ function App() {
 
       <p className="site-note">
         Nabben-koordinaterna är preliminära och avser en användbar sökpunkt i Mariehamn.
+        {fetchedRadius !== null ? (
+          <> <a href={getFinbifSourceUrl(fetchedRadius)} target="_blank" rel="noreferrer">Visa data</a></>
+        ) : null}
       </p>
 
       {error ? (
