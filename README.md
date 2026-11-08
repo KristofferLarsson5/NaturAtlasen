@@ -1,25 +1,25 @@
-# Naturatlasen
+# NaturAtlasen
 
-## 1. Om Naturatlasen
+## 1. About NaturAtlasen
 
-Naturatlasen är en interaktiv webbapplikation för att utforska biologisk mångfald och naturinventeringar i Mariehamn på Åland. Den första versionen fokuserar på området Nabben och visar observationer från FinBIF i realtid, filtrerade med en geospatial radie baserad på en preliminär sökpunkt.
+NaturAtlasen is an interactive web application for exploring biodiversity and nature observations in Mariehamn, Åland. The first version focuses on the Nabben area and displays observations from FinBIF, filtered by geographic radius around a preliminary search point.
 
-## 2. Projektets syfte
+## 2. Project purpose
 
-Syftet med projektet är att göra det enkelt att se vilka arter och organismgrupper som har observerats nära Mariehamn, vilka taxon som är vanligast och hur observationerna fördelar sig över tid. Grundtanken är att skapa en lättbegriplig portal för utforskning och inte en administrativ datamodell.
+The goal of this project is to make it easy to see which species and organism groups have been observed near Mariehamn, which taxa are most common, and how observations are distributed over time. The aim is to provide an accessible exploration portal, not an administrative data system.
 
-## 3. Funktioner
+## 3. Features
 
-- Val mellan sökradie 250 m och 500 m.
-- Hämta observationer från FinBIF via Vite-proxy i utvecklingsläge.
-- Haversine-baserad geografisk filtrering för att hålla endast observationer inom vald radie.
-- Statistiköversikt med antalet observationer, unika taxa, organismgrupper och observationsår.
-- Stapeldiagram för observationer per organismgrupp.
-- Stapeldiagram för observationer per år i kronologisk ordning.
-- Lista över de 15 vanligaste taxa.
-- Tydliga felmeddelanden när API eller data inte kan hämtas.
+- Choose between search radii of 250 m and 500 m.
+- Fetch observations from FinBIF through a Vite proxy in development mode.
+- Filter observations geographically using the Haversine formula, keeping only those within the selected radius.
+- View summary statistics for the number of observations, unique taxa, organism groups, and observation years.
+- View a bar chart of observations by organism group.
+- View a chronological bar chart of observations by year.
+- Browse the 15 most common taxa.
+- See clear error messages when the API or data cannot be reached.
 
-## 4. Teknik och verktyg
+## 4. Technologies
 
 - React
 - TypeScript
@@ -27,37 +27,37 @@ Syftet med projektet är att göra det enkelt att se vilka arter och organismgru
 - CSS
 - FinBIF OpenAPI
 
-## 5. Datakällor
+## 5. Data sources
 
-Projektet använder offentligt tillgängliga observationer från FinBIF, som hämtas från följande samling:
+The project uses publicly available observations from FinBIF, retrieved from the following collection:
 
 - https://ogcapi.laji.fi/collections/lajiapi-connection/items
 
-Detta är initierat som "All Data as Center Points" och ligger till grund för de visuella tabellerna och statistiken i applikationen.
+The collection is called "All Data as Center Points" and provides the data used in the application's visualizations and statistics.
 
 ## 6. Installation
 
-Installera beroenden:
+Install the dependencies:
 
 ```bash
 npm install
 ```
 
-## 7. Starta projektet lokalt
+## 7. Run the project locally
 
-Starta utvecklingsservern:
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Vite kommer då att köra appen lokalt, vanligtvis på:
+Vite will run the app locally, usually at:
 
 ```text
 http://localhost:5173/
 ```
 
-## 8. Projektstruktur
+## 8. Project structure
 
 ```text
 src/
@@ -82,91 +82,91 @@ src/
   App.css
 ```
 
-## 9. Hur FinBIF API används
+## 9. How the FinBIF API is used
 
-Applikationen hämtar data via en Vite-proxy för att undvika CORS-problem i utvecklingsmiljön:
+In development, the application fetches data through a Vite proxy to avoid CORS issues:
 
 ```text
 /api/finbif/collections/lajiapi-connection/items
 ```
 
-Proxy-konfigurationen i Vite omdirigerar anropet mot FinBIF, och appen skickar med parametrar för:
+The Vite proxy forwards requests to FinBIF. The app sends the following parameters:
 
-- bbox
-- limit
-- offset
-- f=json
+- `bbox`
+- `limit`
+- `offset`
+- `f=json`
 
-Det finns även en geografisk filtrering i TypeScript efter hämtning, så att observationer som ligger utanför vald radie inte visas i statistiken.
+After fetching the data, the app also filters observations in TypeScript so that observations outside the selected radius are not included in the statistics.
 
-## 10. Geografisk filtrering
+## 10. Geographic filtering
 
-Den första versionen använder Nabben som område:
+The first version uses Nabben as its area of interest:
 
-- Latitud: 60.1137829
-- Longitud: 19.9472856
+- Latitude: 60.1137829
+- Longitude: 19.9472856
 
-Koordinaterna är preliminära och får inte ses som en officiell gräns för ett naturreservat eller ett definierat naturområde. Appen hämtar först observationer i en geografisk bbox omkring den valda sökpunkt och filtrerar därefter i TypeScript med haversine-formeln. Detta säkerställer att endast observationer inom den valda radien används i statistikuppdateringen.
+These coordinates are preliminary and should not be considered an official boundary for a nature reserve or other defined natural area. The app first fetches observations within a geographic bounding box around the search point, then filters them in TypeScript using the Haversine formula. This ensures that only observations within the selected radius are included in the statistics.
 
-## 11. Datakvalitet och begränsningar
+## 11. Data quality and limitations
 
-- Data kommer från offentliga observationer i FinBIF.
-- Vissa observationer kan ha ungefärliga eller förskjutna koordinater.
-- Känsliga arter kan ha begränsade eller dolda positionsuppgifter.
-- Observationer är observationer, inte nödvändigtvis antal individer.
-- Vissa fält kan saknas eller vara null.
-- Appen hanterar saknade värden utan att krascha.
+- The data comes from publicly available observations in FinBIF.
+- Some observations may have approximate or obscured coordinates.
+- Location information for sensitive species may be restricted or hidden.
+- Observations represent records, not necessarily counts of individual organisms.
+- Some fields may be missing or null.
+- The app handles missing values without crashing.
 
-## 12. Licenser och källhänvisning
+## 12. Licensing and attribution
 
-- Datakällan är FinBIF och dess offentligt tillgängliga observationer.
-- Relevanta licenser och användningsvillkor kan variera mellan olika datamängder, bilder och metadata.
-- Fotografier och andra material får inte återanvändas utan att licensen har kontrollerats.
-- Denna applikation visar endast data som hämtats från API:t och presenterar poster utan att lögga in eller exponera hemliga nycklar.
+- The data source is FinBIF and its publicly available observations.
+- Applicable licenses and terms of use may vary between datasets, images, and metadata.
+- Check the license before reusing photographs or other materials.
+- This application displays data retrieved from the API. It does not require users to log in or expose secret keys.
 
-## 13. Kända problem
+## 13. Known issues
 
-- Vissa observationsposter kan sakna eller ha ofullständiga namn och koordinater.
-- FinBIF kan ibland ge få eller inga resultat för en mycket liten bbox.
-- Appen är avsiktligt enkel och förlitar sig på CSV-liknande geodata från API:t, utan större kartbibliotek.
+- Some observation records may have missing or incomplete names and coordinates.
+- FinBIF may return few or no results for a very small bounding box.
+- The app is intentionally simple and relies on geospatial data from the API rather than a full-featured mapping library.
 
-## 14. Planerade funktioner
+## 14. Planned features
 
-- Lägg till fler områden i Mariehamn.
-- Utöka appen med en naturdagbok för användaren.
-- Lägga till karta i ett senare utvecklingssteg.
-- Exponera mer detaljerad taxonomisk information och filter.
+- Add more areas in Mariehamn.
+- Add a nature journal for users.
+- Add a map in a future development phase.
+- Provide more detailed taxonomic information and filters.
 
-## 15. Felsökning
+## 15. Troubleshooting
 
-### Problem: Appen visar fel om hämtning från FinBIF
+### Problem: The app displays an error when fetching data from FinBIF
 
-Kontrollera att Vite-proxyn är aktiv och att du kör appen med `npm run dev`.
+Make sure the Vite proxy is running and that you started the app with `npm run dev`.
 
-### Problem: Inga observationer visas
+### Problem: No observations are displayed
 
-- Kontrollera att radien är vald korrekt.
-- Kontrollera om området har observationer nära Nabben.
-- Se efter felmeddelandet i applikationen.
+- Check that the selected radius is correct.
+- Check whether there are observations near Nabben.
+- Check the error message displayed in the app.
 
-### Problem: Byggfel i TypeScript
+### Problem: TypeScript build errors
 
-Kör:
-
-```bash
-npm run build
-```
-
-Om fel uppstår, kontrollera att typdefinitioner och importvägar stämmer.
-
-## Bygg projektet
+Run:
 
 ```bash
 npm run build
 ```
 
-Detta kör TypeScript-kontrollen och bygger en produktionsversion av appen.
+If errors occur, check that the type definitions and import paths are correct.
 
-## Notering om statistik
+## Build the project
 
-Statistiken i appen avser observationer i den valda radien, inte automatiskt antal individer. Det innebär att en observation kan representera en händelse eller ett fynd, men inte alltid ett exakt antal levande individer.
+```bash
+npm run build
+```
+
+This runs the TypeScript checks and builds a production version of the app.
+
+## Note about statistics
+
+The app's statistics refer to observations within the selected radius, not automatically to the number of individual organisms. An observation may represent an event or a finding, but it does not always indicate an exact count of living individuals.
