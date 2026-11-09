@@ -4,7 +4,7 @@ import { Header } from './components/Header'
 import { StatCard } from './components/StatCard'
 import { TopTaxa } from './components/TopTaxa'
 import { YearChart } from './components/YearChart'
-import { NABBEN } from './data/locations'
+import { AREAS, TULLARNS_ANGAR, type AreaConfig } from './data/locations'
 import { fetchFinbifObservations, getFinbifSourceUrl } from './services/finbif'
 import type { Observation } from './types/observation'
 import { filterObservationsByRadius } from './utils/distance'
@@ -61,6 +61,7 @@ function getTopTaxa(observations: Observation[]) {
 }
 
 function App() {
+  const [selectedArea, setSelectedArea] = useState<AreaConfig>(TULLARNS_ANGAR)
   const [selectedRadius, setSelectedRadius] = useState<number>(250)
   const [observations, setObservations] = useState<Observation[]>([])
   const [fetchedRadius, setFetchedRadius] = useState<number | null>(null)
@@ -71,11 +72,11 @@ function App() {
     () =>
       filterObservationsByRadius(
         observations,
-        NABBEN.center.lat,
-        NABBEN.center.lon,
+        selectedArea.center.lat,
+        selectedArea.center.lon,
         selectedRadius,
       ),
-    [observations, selectedRadius],
+    [observations, selectedArea, selectedRadius],
   )
 
   const stats = useMemo(() => calculateObservationStats(filteredObservations), [filteredObservations])
@@ -83,13 +84,32 @@ function App() {
   const yearData = useMemo(() => getYearBreakdown(filteredObservations), [filteredObservations])
   const topTaxa = useMemo(() => getTopTaxa(filteredObservations), [filteredObservations])
 
+  function handleAreaChange(areaName: string) {
+    const nextArea = AREAS.find((area) => area.name === areaName)
+    if (!nextArea) {
+      return
+    }
+
+    setSelectedArea(nextArea)
+    setObservations([])
+    setFetchedRadius(null)
+    setError(null)
+  }
+
+  function handleRadiusChange(radius: number) {
+    setSelectedRadius(radius)
+    setObservations([])
+    setFetchedRadius(null)
+    setError(null)
+  }
+
   async function handleFetchData() {
     setLoading(true)
     setError(null)
     setFetchedRadius(null)
 
     try {
-      const nextObservations = await fetchFinbifObservations(selectedRadius)
+      const nextObservations = await fetchFinbifObservations(selectedArea, selectedRadius)
       setObservations(nextObservations)
       setFetchedRadius(selectedRadius)
     } catch (fetchError) {
@@ -107,17 +127,19 @@ function App() {
   return (
     <div className="app-shell">
       <Header
-        areaName={NABBEN.name}
+        areas={AREAS}
+        selectedArea={selectedArea}
+        onAreaChange={handleAreaChange}
         radius={selectedRadius}
-        onRadiusChange={setSelectedRadius}
+        onRadiusChange={handleRadiusChange}
         onFetchData={handleFetchData}
         loading={loading}
       />
 
       <p className="site-note">
-        Nabben-koordinaterna är preliminära och avser en användbar sökpunkt i Mariehamn.
+        {selectedArea.description}
         {fetchedRadius !== null ? (
-          <> <a href={getFinbifSourceUrl(fetchedRadius)} target="_blank" rel="noreferrer">Visa data</a></>
+          <> <a href={getFinbifSourceUrl(selectedArea, fetchedRadius)} target="_blank" rel="noreferrer">Visa data</a></>
         ) : null}
       </p>
 

@@ -7,6 +7,15 @@ export type AreaConfig = {
   description: string
 }
 
+export const TULLARNS_ANGAR: AreaConfig = {
+  name: 'Tullarns ängar',
+  center: {
+    lat: 60.09512,
+    lon: 19.94753,
+  },
+  description: 'Preliminär sökpunkt för Tullarns ängar i Mariehamn.',
+}
+
 export const NABBEN: AreaConfig = {
   name: 'Nabben',
   center: {
@@ -15,6 +24,8 @@ export const NABBEN: AreaConfig = {
   },
   description: 'Preliminär sökpunkt för naturinventeringar i Mariehamn.',
 }
+
+export const AREAS: AreaConfig[] = [TULLARNS_ANGAR, NABBEN]
 
 export function buildBoundingBox(
   latitude: number,

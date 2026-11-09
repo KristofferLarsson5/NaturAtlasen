@@ -39,12 +39,36 @@
   width: min(100%, 420px);
 }
 
-.area-pill {
-  background: rgba(93, 144, 119, 0.16);
+.area-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: var(--forest-700);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.area-picker select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid rgba(24, 55, 43, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
   color: var(--forest-900);
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-weight: 600;
+  padding: 10px 12px;
+}
+
+.area-picker select:focus-visible,
+.radius-button:focus-visible,
+.fetch-button:focus-visible {
+  outline: 3px solid rgba(65, 122, 98, 0.35);
+  outline-offset: 2px;
+}
+
+.area-picker select:disabled,
+.radius-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
 }
 
 .radius-picker {

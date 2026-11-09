@@ -11,7 +11,7 @@ type TopTaxaProps = {
 export function TopTaxa({ taxa }: TopTaxaProps) {
   return (
     <section className="card list-card">
-      <h2>Vanligaste taxa</h2>
+      <h2>Vanligaste art</h2>
 
       {taxa.length === 0 ? (
         <p className="empty-state">Inga taxa att visa för det valda området.</p>

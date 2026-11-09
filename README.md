@@ -2,7 +2,7 @@
 
 ## 1. About NaturAtlasen
 
-NaturAtlasen is an interactive web application for exploring biodiversity and nature observations in Mariehamn, Åland. The first version focuses on the Nabben area and displays observations from FinBIF, filtered by geographic radius around a preliminary search point.
+NaturAtlasen is an interactive web application for exploring biodiversity and nature observations in Mariehamn, Åland. Choose between Nabben and Tullarns ängar to view observations from FinBIF within a geographic radius around a preliminary search point.
 
 ## 2. Project purpose
 
@@ -11,6 +11,7 @@ The goal of this project is to make it easy to see which species and organism gr
 ## 3. Features
 
 - Choose between search radii of 250 m and 500 m.
+- Choose between Nabben and Tullarns ängar.
 - Fetch observations from FinBIF through a Vite proxy in development mode.
 - Filter observations geographically using the Haversine formula, keeping only those within the selected radius.
 - View summary statistics for the number of observations, unique taxa, organism groups, and observation years.
@@ -101,12 +102,12 @@ After fetching the data, the app also filters observations in TypeScript so that
 
 ## 10. Geographic filtering
 
-The first version uses Nabben as its area of interest:
+The app currently supports two preliminary search points:
 
-- Latitude: 60.1137829
-- Longitude: 19.9472856
+- Tullarns ängar: latitude 60.09512, longitude 19.94753
+- Nabben: latitude 60.1137829, longitude 19.9472856
 
-These coordinates are preliminary and should not be considered an official boundary for a nature reserve or other defined natural area. The app first fetches observations within a geographic bounding box around the search point, then filters them in TypeScript using the Haversine formula. This ensures that only observations within the selected radius are included in the statistics.
+These coordinates are preliminary search points and should not be considered official boundaries for either area. The app first fetches observations from FinBIF within a geographic bounding box around the selected point, then filters them in TypeScript using the Haversine formula. This ensures that only observations within the selected radius are included in the statistics.
 
 ## 11. Data quality and limitations
 
@@ -146,7 +147,7 @@ Make sure the Vite proxy is running and that you started the app with `npm run d
 ### Problem: No observations are displayed
 
 - Check that the selected radius is correct.
-- Check whether there are observations near Nabben.
+- Check whether there are observations near the selected area.
 - Check the error message displayed in the app.
 
 ### Problem: TypeScript build errors

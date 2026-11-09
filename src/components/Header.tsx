@@ -1,5 +1,9 @@
+import type { AreaConfig } from '../data/locations'
+
 type HeaderProps = {
-  areaName: string
+  areas: AreaConfig[]
+  selectedArea: AreaConfig
+  onAreaChange: (areaName: string) => void
   radius: number
   onRadiusChange: (value: number) => void
   onFetchData: () => void
@@ -9,7 +13,9 @@ type HeaderProps = {
 const radiusOptions = [250, 500]
 
 export function Header({
-  areaName,
+  areas,
+  selectedArea,
+  onAreaChange,
   radius,
   onRadiusChange,
   onFetchData,
@@ -23,7 +29,20 @@ export function Header({
       </div>
 
       <div className="header-meta">
-        <div className="area-pill">Aktuellt område: {areaName}</div>
+        <label className="area-picker">
+          <span>Välj område</span>
+          <select
+            value={selectedArea.name}
+            onChange={(event) => onAreaChange(event.target.value)}
+            disabled={loading}
+          >
+            {areas.map((area) => (
+              <option key={area.name} value={area.name}>
+                {area.name}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <div className="radius-picker" aria-label="Välj sökradie">
           {radiusOptions.map((option) => (
@@ -32,6 +51,7 @@ export function Header({
               type="button"
               className={option === radius ? 'radius-button is-active' : 'radius-button'}
               onClick={() => onRadiusChange(option)}
+              disabled={loading}
             >
               {option} meter
             </button>

@@ -1,13 +1,14 @@
-import { buildBoundingBox, NABBEN } from '../data/locations'
+import { buildBoundingBox } from '../data/locations'
+import type { AreaConfig } from '../data/locations'
 import type { Observation, ObservationFeature } from '../types/observation'
 import { calculateDistanceKm } from '../utils/distance'
 
 const DEFAULT_LIMIT = 1000
 const FINBIF_ITEMS_URL = 'https://ogcapi.laji.fi/collections/lajiapi-connection/items'
 
-export function getFinbifSourceUrl(radiusMeters: number): string {
+export function getFinbifSourceUrl(area: AreaConfig, radiusMeters: number): string {
   const params = new URLSearchParams({
-    bbox: buildBoundingBox(NABBEN.center.lat, NABBEN.center.lon, radiusMeters).join(','),
+    bbox: buildBoundingBox(area.center.lat, area.center.lon, radiusMeters).join(','),
     limit: String(DEFAULT_LIMIT),
     offset: '0',
     f: 'json',
@@ -110,8 +111,11 @@ export function mapFeatureToObservation(
   }
 }
 
-export async function fetchFinbifObservations(radiusMeters: number): Promise<Observation[]> {
-  const bbox = buildBoundingBox(NABBEN.center.lat, NABBEN.center.lon, radiusMeters)
+export async function fetchFinbifObservations(
+  area: AreaConfig,
+  radiusMeters: number,
+): Promise<Observation[]> {
+  const bbox = buildBoundingBox(area.center.lat, area.center.lon, radiusMeters)
   const allFeatures: ObservationFeature[] = []
   let offset = 0
   let total = Number.POSITIVE_INFINITY
@@ -154,7 +158,7 @@ export async function fetchFinbifObservations(radiusMeters: number): Promise<Obs
   }
 
   return allFeatures
-    .map((feature) => mapFeatureToObservation(feature, NABBEN.center.lat, NABBEN.center.lon))
+    .map((feature) => mapFeatureToObservation(feature, area.center.lat, area.center.lon))
     .filter((item): item is Observation => item !== null)
     .filter((observation) => observation.distance <= radiusMeters)
 }

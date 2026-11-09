@@ -12,12 +12,12 @@ export function GroupChart({ data }: GroupChartProps) {
 
   return (
     <section className="card chart-card">
-      <h2>Observationer per organismgrupp</h2>
+      <h2>Observationer</h2>
 
       {data.length === 0 ? (
         <p className="empty-state">Inga observationer att visa i den valda radien.</p>
       ) : (
-        <div className="bars" aria-label="Observationer per organismgrupp">
+        <div className="bars" aria-label="Observationer">
           {data.map((item) => (
             <div key={item.name} className="bar-row">
               <span className="bar-label">{item.name}</span>
