@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
 import { GroupChart } from './components/GroupChart'
 import { Header } from './components/Header'
 import { StatCard } from './components/StatCard'
@@ -60,6 +62,10 @@ function getTopTaxa(observations: Observation[]) {
     .slice(0, 15)
 }
 
+function getRadiusOptions(area: AreaConfig) {
+  return area.name === 'Mariehamn' ? [250, 500, 1000, 2000, 5000] : [250, 500]
+}
+
 function App() {
   const [selectedArea, setSelectedArea] = useState<AreaConfig>(TULLARNS_ANGAR)
   const [selectedRadius, setSelectedRadius] = useState<number>(250)
@@ -67,6 +73,8 @@ function App() {
   const [fetchedRadius, setFetchedRadius] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const observationCache = useRef<Map<string, Observation[]>>(new Map())
+  const mapRef = useRef<HTMLDivElement | null>(null)
 
   const filteredObservations = useMemo(
     () =>
@@ -90,7 +98,14 @@ function App() {
       return
     }
 
+    const nextRadiusOptions = getRadiusOptions(nextArea)
+    const nextRadius =
+      nextRadiusOptions.includes(selectedRadius) || nextArea.defaultRadius === undefined
+        ? selectedRadius
+        : nextArea.defaultRadius ?? nextRadiusOptions[0]
+
     setSelectedArea(nextArea)
+    setSelectedRadius(nextRadiusOptions.includes(nextRadius) ? nextRadius : nextRadiusOptions[0])
     setObservations([])
     setFetchedRadius(null)
     setError(null)
@@ -103,13 +118,63 @@ function App() {
     setError(null)
   }
 
+  useEffect(() => {
+    if (!mapRef.current) {
+      return
+    }
+
+    const map = L.map(mapRef.current, {
+      zoomControl: false,
+      attributionControl: true,
+      scrollWheelZoom: false,
+    }).setView([60.10, 19.95], 12)
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map)
+
+    const markers = AREAS.map((area) => {
+      const color = area.name === selectedArea.name ? '#1f5d48' : '#79a18d'
+      const marker = L.circleMarker([area.center.lat, area.center.lon], {
+        radius: area.name === selectedArea.name ? 9 : 7,
+        color: '#ffffff',
+        weight: 2,
+        fillColor: color,
+        fillOpacity: 1,
+      }).addTo(map)
+
+      marker.bindPopup(`${area.name}<br>${area.center.lat.toFixed(7)}, ${area.center.lon.toFixed(7)}`)
+      return marker
+    })
+
+    map.fitBounds(
+      L.latLngBounds(markers.map((marker) => marker.getLatLng())),
+      { padding: [24, 24] },
+    )
+
+    return () => {
+      map.remove()
+    }
+  }, [selectedArea])
+
   async function handleFetchData() {
+    const cacheKey = `${selectedArea.name}:${selectedRadius}`
+    const cachedObservations = observationCache.current.get(cacheKey)
+
+    if (cachedObservations) {
+      setObservations(cachedObservations)
+      setFetchedRadius(selectedRadius)
+      setError(null)
+      return
+    }
+
     setLoading(true)
     setError(null)
     setFetchedRadius(null)
 
     try {
       const nextObservations = await fetchFinbifObservations(selectedArea, selectedRadius)
+      observationCache.current.set(cacheKey, nextObservations)
       setObservations(nextObservations)
       setFetchedRadius(selectedRadius)
     } catch (fetchError) {
@@ -163,6 +228,38 @@ function App() {
 
       <section className="detail-panel">
         <TopTaxa taxa={topTaxa.map((taxon) => ({ ...taxon, label: taxon.label }))} />
+      </section>
+
+      <section className="map-panel card" aria-label="Översikt över koordinater">
+        <div className="map-panel__header">
+          <h2>Koordinater för områden</h2>
+          <span>Mariehamn</span>
+        </div>
+
+        <div
+          ref={mapRef}
+          className="map-viewport"
+          role="img"
+          aria-label="Karta över Mariehamn med de tre områdena markerade"
+        />
+
+        <div className="coordinate-list">
+          {AREAS.map((area) => (
+            <div key={area.name} className="coordinate-item">
+              <div>
+                <strong>{area.name}</strong>
+                <span>{area.center.lat.toFixed(7)}, {area.center.lon.toFixed(7)}</span>
+              </div>
+              <a
+                href={`https://www.openstreetmap.org/?mlat=${area.center.lat}&mlon=${area.center.lon}#map=15/${area.center.lat}/${area.center.lon}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Öppna i karta
+              </a>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   )

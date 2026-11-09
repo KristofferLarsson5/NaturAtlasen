@@ -10,8 +10,6 @@ type HeaderProps = {
   loading: boolean
 }
 
-const radiusOptions = [250, 500]
-
 export function Header({
   areas,
   selectedArea,
@@ -21,6 +19,8 @@ export function Header({
   onFetchData,
   loading,
 }: HeaderProps) {
+  const radiusOptions = selectedArea.name === 'Mariehamn' ? [250, 500, 1000, 2000, 5000] : [250, 500]
+
   return (
     <header className="page-header">
       <div>
@@ -58,8 +58,26 @@ export function Header({
           ))}
         </div>
 
-        <button type="button" className="fetch-button" onClick={onFetchData} disabled={loading}>
-          {loading ? 'Hämtar data…' : 'Hämta data från FinBIF'}
+        <button
+          type="button"
+          className={loading ? 'fetch-button is-loading' : 'fetch-button'}
+          onClick={onFetchData}
+          disabled={loading}
+        >
+          <span className="fetch-button__content">
+            {loading ? (
+              <>
+                <span className="loading-dots" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+                <span>Hämtar data…</span>
+              </>
+            ) : (
+              <>Hämta data från FinBIF</>
+            )}
+          </span>
         </button>
       </div>
     </header>

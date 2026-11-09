@@ -3,7 +3,8 @@ import type { AreaConfig } from '../data/locations'
 import type { Observation, ObservationFeature } from '../types/observation'
 import { calculateDistanceKm } from '../utils/distance'
 
-const DEFAULT_LIMIT = 1000
+const DEFAULT_LIMIT = 10000
+const MAX_CONCURRENT_REQUESTS = 8
 const FINBIF_ITEMS_URL = 'https://ogcapi.laji.fi/collections/lajiapi-connection/items'
 
 export function getFinbifSourceUrl(area: AreaConfig, radiusMeters: number): string {
@@ -117,10 +118,12 @@ export async function fetchFinbifObservations(
 ): Promise<Observation[]> {
   const bbox = buildBoundingBox(area.center.lat, area.center.lon, radiusMeters)
   const allFeatures: ObservationFeature[] = []
-  let offset = 0
-  let total = Number.POSITIVE_INFINITY
 
-  while (offset < total) {
+  async function fetchPage(offset: number): Promise<{
+    features: ObservationFeature[]
+    total: number
+    pageSize: number
+  }> {
     const params = new URLSearchParams({
       bbox: bbox.join(','),
       limit: String(DEFAULT_LIMIT),
@@ -140,22 +143,38 @@ export async function fetchFinbifObservations(
       pageSize?: number
     }
 
-    const featureList = data.features ?? []
-    allFeatures.push(...featureList)
+    const features = data.features ?? []
+    const pageSize = Number(data.pageSize ?? features.length)
 
-    total = Number(data.total ?? allFeatures.length)
-    const pageSize = Number(data.pageSize ?? featureList.length)
-
-    if (!featureList.length || pageSize === 0) {
-      break
-    }
-
-    offset += pageSize
-
-    if (offset >= total) {
-      break
+    return {
+      features,
+      total: Number(data.total ?? features.length),
+      pageSize: Number.isFinite(pageSize) && pageSize > 0 ? pageSize : DEFAULT_LIMIT,
     }
   }
+
+  const firstPage = await fetchPage(0)
+  allFeatures.push(...firstPage.features)
+
+  const total = firstPage.total
+  const pageSize = firstPage.pageSize || DEFAULT_LIMIT
+  const remainingOffsets: number[] = []
+
+  for (let offset = pageSize; offset < total; offset += pageSize) {
+    remainingOffsets.push(offset)
+  }
+
+  let nextOffsetIndex = 0
+  const workers = Array.from({ length: Math.min(MAX_CONCURRENT_REQUESTS, remainingOffsets.length) }, async () => {
+    while (nextOffsetIndex < remainingOffsets.length) {
+      const offset = remainingOffsets[nextOffsetIndex]
+      nextOffsetIndex += 1
+      const page = await fetchPage(offset)
+      allFeatures.push(...page.features)
+    }
+  })
+
+  await Promise.all(workers)
 
   return allFeatures
     .map((feature) => mapFeatureToObservation(feature, area.center.lat, area.center.lon))

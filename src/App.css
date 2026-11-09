@@ -103,9 +103,74 @@
   font-weight: 700;
 }
 
+.fetch-button__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 24px;
+  height: 12px;
+}
+
+.loading-dots span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  animation: loading-bounce 0.8s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.fetch-button.is-loading {
+  animation: loading-pulse 1.4s ease-in-out infinite;
+}
+
+.fetch-button:not(.is-loading) .loading-dots {
+  display: none;
+}
+
 .fetch-button:disabled {
   opacity: 0.75;
   cursor: wait;
+}
+
+@keyframes loading-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0) scale(0.75);
+    opacity: 0.45;
+  }
+
+  40% {
+    transform: translateY(-4px) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes loading-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(53, 103, 83, 0.28);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px rgba(53, 103, 83, 0);
+  }
 }
 
 .site-note {
@@ -241,6 +306,103 @@
 
 .detail-panel {
   margin-top: 18px;
+}
+
+.map-panel {
+  margin-top: 28px;
+  padding: 22px;
+}
+
+.map-panel__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.map-panel__header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.map-panel__header span {
+  color: var(--forest-700);
+  font-weight: 700;
+}
+
+.map-viewport {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(24, 55, 43, 0.08);
+  height: 320px;
+}
+
+.map-viewport iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.map-markers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.map-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(33, 95, 72, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 18px rgba(15, 51, 38, 0.28);
+}
+
+.map-marker.is-active {
+  background: rgba(18, 72, 52, 1);
+  box-shadow: 0 10px 20px rgba(18, 72, 52, 0.36);
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.coordinate-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.coordinate-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(24, 55, 43, 0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.coordinate-item strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--forest-900);
+}
+
+.coordinate-item span {
+  color: var(--forest-700);
+  font-size: 0.9rem;
+}
+
+.coordinate-item a {
+  color: var(--forest-900);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .taxa-list {

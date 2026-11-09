@@ -5,6 +5,17 @@ export type AreaConfig = {
     lon: number
   }
   description: string
+  defaultRadius?: number
+}
+
+export const MARIEHAMN: AreaConfig = {
+  name: 'Mariehamn',
+  center: {
+    lat: 60.0984,
+    lon: 19.944,
+  },
+  description: 'Stadsvid sökning över Mariehamn för att testa större FinBIF-urval.',
+  defaultRadius: 5000,
 }
 
 export const TULLARNS_ANGAR: AreaConfig = {
@@ -25,7 +36,7 @@ export const NABBEN: AreaConfig = {
   description: 'Preliminär sökpunkt för naturinventeringar i Mariehamn.',
 }
 
-export const AREAS: AreaConfig[] = [TULLARNS_ANGAR, NABBEN]
+export const AREAS: AreaConfig[] = [MARIEHAMN, TULLARNS_ANGAR, NABBEN]
 
 export function buildBoundingBox(
   latitude: number,
