@@ -133,7 +133,18 @@ function App() {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map)
 
-    const markers = AREAS.map((area) => {
+    const searchCircle = L.circle(
+      [selectedArea.center.lat, selectedArea.center.lon],
+      {
+        radius: selectedRadius,
+        color: '#1f5d48',
+        weight: 2,
+        fillColor: '#5d9077',
+        fillOpacity: 0.18,
+      },
+    ).addTo(map)
+
+    AREAS.forEach((area) => {
       const color = area.name === selectedArea.name ? '#1f5d48' : '#79a18d'
       const marker = L.circleMarker([area.center.lat, area.center.lon], {
         radius: area.name === selectedArea.name ? 9 : 7,
@@ -144,18 +155,14 @@ function App() {
       }).addTo(map)
 
       marker.bindPopup(`${area.name}<br>${area.center.lat.toFixed(7)}, ${area.center.lon.toFixed(7)}`)
-      return marker
     })
 
-    map.fitBounds(
-      L.latLngBounds(markers.map((marker) => marker.getLatLng())),
-      { padding: [24, 24] },
-    )
+    map.fitBounds(searchCircle.getBounds(), { padding: [24, 24] })
 
     return () => {
       map.remove()
     }
-  }, [selectedArea])
+  }, [selectedArea, selectedRadius])
 
   async function handleFetchData() {
     const cacheKey = `${selectedArea.name}:${selectedRadius}`
@@ -232,15 +239,17 @@ function App() {
 
       <section className="map-panel card" aria-label="Översikt över koordinater">
         <div className="map-panel__header">
-          <h2>Koordinater för områden</h2>
-          <span>Mariehamn</span>
+          <h2>Sökområde på karta</h2>
+          <span>
+            {selectedArea.name} · {selectedRadius} m radie ({selectedRadius * 2} m diameter)
+          </span>
         </div>
 
         <div
           ref={mapRef}
           className="map-viewport"
           role="img"
-          aria-label="Karta över Mariehamn med de tre områdena markerade"
+          aria-label={`Karta över ${selectedArea.name} med sökradie ${selectedRadius} meter`}
         />
 
         <div className="coordinate-list">

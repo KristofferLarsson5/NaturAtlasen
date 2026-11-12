@@ -12,6 +12,7 @@ The goal of this project is to make it easy to see which species and organism gr
 
 - Choose between search radii of 250 m and 500 m.
 - Choose between Nabben and Tullarns ängar.
+- View the selected search radius as a circle on the map, with its radius and diameter shown.
 - Fetch observations from FinBIF through a Vite proxy in development mode.
 - Filter observations geographically using the Haversine formula, keeping only those within the selected radius.
 - View summary statistics for the number of observations, unique taxa, organism groups, and observation years.
@@ -135,7 +136,6 @@ These coordinates are preliminary search points and should not be considered off
 
 - Add more areas in Mariehamn.
 - Add a nature journal for users.
-- Add a map in a future development phase.
 - Provide more detailed taxonomic information and filters.
 
 ## 15. Troubleshooting
