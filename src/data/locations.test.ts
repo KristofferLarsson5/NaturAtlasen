@@ -1,10 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { AREAS, MARIEHAMN } from './locations'
+import { AREAS } from './locations'
 
 describe('location presets', () => {
-  it('includes a Mariehamn-wide area with a wider default radius', () => {
-    expect(AREAS.some((area) => area.name === 'Mariehamn')).toBe(true)
-    expect(MARIEHAMN.defaultRadius).toBeGreaterThanOrEqual(3000)
-    expect(MARIEHAMN.center.lat).toBeGreaterThan(60)
+  it('includes only the two specific search areas', () => {
+    expect(AREAS.map((area) => area.name)).toEqual(['Tullarns ängar', 'Nabben'])
   })
 })

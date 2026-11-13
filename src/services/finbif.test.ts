@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { MARIEHAMN } from '../data/locations'
+import { TULLARNS_ANGAR } from '../data/locations'
 import { fetchFinbifObservations } from './finbif'
 
 describe('FinBIF fetch', () => {
@@ -10,7 +10,7 @@ describe('FinBIF fetch', () => {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: [19.94 + (index % 50) * 0.001, 60.09 + (index % 40) * 0.001],
+        coordinates: [19.9455 + (index % 50) * 0.00008, 60.0935 + (index % 40) * 0.00008],
       },
       properties: {
         Tieteellinen_nimi: `Species ${index}`,
@@ -53,7 +53,7 @@ describe('FinBIF fetch', () => {
     vi.stubGlobal('fetch', fetchMock)
 
     try {
-      const observations = await fetchFinbifObservations(MARIEHAMN, 5000)
+      const observations = await fetchFinbifObservations(TULLARNS_ANGAR, 500)
 
       expect(observations.length).toBe(totalFeatures)
       expect(maxConcurrentRequests).toBeGreaterThan(1)

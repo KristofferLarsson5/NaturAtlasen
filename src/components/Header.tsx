@@ -19,7 +19,7 @@ export function Header({
   onFetchData,
   loading,
 }: HeaderProps) {
-  const radiusOptions = selectedArea.name === 'Mariehamn' ? [250, 500, 1000, 2000, 5000] : [250, 500]
+  const radiusOptions = [250, 500]
 
   return (
     <header className="page-header">

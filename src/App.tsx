@@ -62,10 +62,6 @@ function getTopTaxa(observations: Observation[]) {
     .slice(0, 15)
 }
 
-function getRadiusOptions(area: AreaConfig) {
-  return area.name === 'Mariehamn' ? [250, 500, 1000, 2000, 5000] : [250, 500]
-}
-
 function App() {
   const [selectedArea, setSelectedArea] = useState<AreaConfig>(TULLARNS_ANGAR)
   const [selectedRadius, setSelectedRadius] = useState<number>(250)
@@ -98,14 +94,7 @@ function App() {
       return
     }
 
-    const nextRadiusOptions = getRadiusOptions(nextArea)
-    const nextRadius =
-      nextRadiusOptions.includes(selectedRadius) || nextArea.defaultRadius === undefined
-        ? selectedRadius
-        : nextArea.defaultRadius ?? nextRadiusOptions[0]
-
     setSelectedArea(nextArea)
-    setSelectedRadius(nextRadiusOptions.includes(nextRadius) ? nextRadius : nextRadiusOptions[0])
     setObservations([])
     setFetchedRadius(null)
     setError(null)
