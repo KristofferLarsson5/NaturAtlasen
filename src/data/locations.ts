@@ -25,7 +25,25 @@ export const NABBEN: AreaConfig = {
   description: 'Preliminär sökpunkt för naturinventeringar i Mariehamn.',
 }
 
-export const AREAS: AreaConfig[] = [TULLARNS_ANGAR, NABBEN]
+export const BADHUSPARKEN: AreaConfig = {
+  name: 'Badhusparken',
+  center: {
+    lat: 60.0987919,
+    lon: 19.9267776,
+  },
+  description: 'Preliminär sökpunkt för Badhusparken i Mariehamn.',
+}
+
+export const YTTERNAS_ASPHOLM: AreaConfig = {
+  name: 'Ytternäs / Äspholm',
+  center: {
+    lat: 60.0631308,
+    lon: 19.9569922,
+  },
+  description: 'Preliminär sökpunkt för Ytternäs och Äspholm i Mariehamn.',
+}
+
+export const AREAS: AreaConfig[] = [TULLARNS_ANGAR, NABBEN, BADHUSPARKEN, YTTERNAS_ASPHOLM]
 
 export function buildBoundingBox(
   latitude: number,

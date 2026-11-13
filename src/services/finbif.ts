@@ -21,7 +21,7 @@ export function getFinbifSourceUrl(area: AreaConfig, radiusMeters: number): stri
 function normalizeText(value: unknown): string | null {
   if (typeof value === 'string') {
     const cleaned = value.trim()
-    return cleaned.length > 0 ? cleaned : null
+    return cleaned.length > 0 && cleaned.toLowerCase() !== 'none' ? cleaned : null
   }
 
   if (typeof value === 'number' || typeof value === 'boolean') {
@@ -83,11 +83,7 @@ export function mapFeatureToObservation(
     normalizeText(properties.Alkuperainen_nimi) ??
     'Okänt taxon'
 
-  const swedishName =
-    normalizeText(properties.Ruotsinkielinen_nimi) ??
-    normalizeText(properties.Yleiskielinen_nimi) ??
-    normalizeText(properties.Suomenkielinen_nimi) ??
-    null
+  const swedishName = normalizeText(properties.Ruotsinkielinen_nimi)
 
   const group = translateFinnishGroupName(normalizeText(properties.Elioryhma))
   const dateValue =

@@ -13,6 +13,8 @@ import { filterObservationsByRadius } from './utils/distance'
 import { calculateObservationStats } from './utils/statistics'
 import './App.css'
 
+const MIN_LOADING_DURATION_MS = 500
+
 function getGroupBreakdown(observations: Observation[]) {
   const groups = new Map<string, number>()
 
@@ -157,20 +159,19 @@ function App() {
     const cacheKey = `${selectedArea.name}:${selectedRadius}`
     const cachedObservations = observationCache.current.get(cacheKey)
 
-    if (cachedObservations) {
-      setObservations(cachedObservations)
-      setFetchedRadius(selectedRadius)
-      setError(null)
-      return
-    }
-
+    const loadingStartedAt = Date.now()
     setLoading(true)
     setError(null)
     setFetchedRadius(null)
 
     try {
-      const nextObservations = await fetchFinbifObservations(selectedArea, selectedRadius)
-      observationCache.current.set(cacheKey, nextObservations)
+      const nextObservations =
+        cachedObservations ?? (await fetchFinbifObservations(selectedArea, selectedRadius))
+
+      if (cachedObservations === undefined) {
+        observationCache.current.set(cacheKey, nextObservations)
+      }
+
       setObservations(nextObservations)
       setFetchedRadius(selectedRadius)
     } catch (fetchError) {
@@ -181,6 +182,12 @@ function App() {
           : 'Ett fel uppstod vid hämtningen av observationer från FinBIF.',
       )
     } finally {
+      const remainingLoadingTime = MIN_LOADING_DURATION_MS - (Date.now() - loadingStartedAt)
+
+      if (remainingLoadingTime > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingLoadingTime))
+      }
+
       setLoading(false)
     }
   }

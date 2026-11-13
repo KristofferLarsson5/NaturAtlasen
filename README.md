@@ -2,7 +2,7 @@
 
 ## 1. About NaturAtlasen
 
-NaturAtlasen is an interactive web application for exploring biodiversity and nature observations in Mariehamn, Åland. Choose between Nabben and Tullarns ängar to view observations from FinBIF within a geographic radius around a preliminary search point.
+NaturAtlasen is an interactive web application for exploring biodiversity and nature observations in Mariehamn, Åland. Choose between Nabben, Tullarns ängar, Badhusparken, and Ytternäs / Äspholm to view observations from FinBIF within a geographic radius around a preliminary search point.
 
 ## 2. Project purpose
 
@@ -11,7 +11,7 @@ The goal of this project is to make it easy to see which species and organism gr
 ## 3. Features
 
 - Choose between search radii of 250 m and 500 m.
-- Choose between Nabben and Tullarns ängar.
+- Choose between Nabben, Tullarns ängar, Badhusparken, and Ytternäs / Äspholm.
 - View the selected search radius as a circle on the map, with its radius and diameter shown.
 - Fetch observations from FinBIF through a Vite proxy in development mode.
 - Filter observations geographically using the Haversine formula, keeping only those within the selected radius.
@@ -103,10 +103,12 @@ After fetching the data, the app also filters observations in TypeScript so that
 
 ## 10. Geographic filtering
 
-The app currently supports two preliminary search points:
+The app currently supports four preliminary search points:
 
 - Tullarns ängar: latitude 60.09512, longitude 19.94753
 - Nabben: latitude 60.1137829, longitude 19.9472856
+- Badhusparken: latitude 60.0987919, longitude 19.9267776
+- Ytternäs / Äspholm: latitude 60.0631308, longitude 19.9569922
 
 These coordinates are preliminary search points and should not be considered official boundaries for either area. The app first fetches observations from FinBIF within a geographic bounding box around the selected point, then filters them in TypeScript using the Haversine formula. This ensures that only observations within the selected radius are included in the statistics.
 
@@ -134,7 +136,6 @@ These coordinates are preliminary search points and should not be considered off
 
 ## 14. Planned features
 
-- Add more areas in Mariehamn.
 - Add a nature journal for users.
 - Provide more detailed taxonomic information and filters.
 

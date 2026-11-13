@@ -1,8 +1,43 @@
 import { describe, expect, it, vi } from 'vitest'
 import { TULLARNS_ANGAR } from '../data/locations'
-import { fetchFinbifObservations } from './finbif'
+import { fetchFinbifObservations, mapFeatureToObservation } from './finbif'
 
 describe('FinBIF fetch', () => {
+  it('uses the Swedish common name when FinBIF provides one', () => {
+    const observation = mapFeatureToObservation(
+      {
+        geometry: { coordinates: [19.94753, 60.09512] },
+        properties: {
+          Tieteellinen_nimi: 'Species example',
+          Ruotsinkielinen_nimi: 'Svenskt namn',
+          Yleiskielinen_nimi: 'Suomenkielinen nimi',
+        },
+      },
+      TULLARNS_ANGAR.center.lat,
+      TULLARNS_ANGAR.center.lon,
+    )
+
+    expect(observation?.swedishName).toBe('Svenskt namn')
+  })
+
+  it('does not treat Finnish common names as Swedish names', () => {
+    const observation = mapFeatureToObservation(
+      {
+        geometry: { coordinates: [19.94753, 60.09512] },
+        properties: {
+          Tieteellinen_nimi: 'Species example',
+          Ruotsinkielinen_nimi: 'None',
+          Yleiskielinen_nimi: 'Suomenkielinen nimi',
+          Suomenkielinen_nimi: 'Toinen suomenkielinen nimi',
+        },
+      },
+      TULLARNS_ANGAR.center.lat,
+      TULLARNS_ANGAR.center.lon,
+    )
+
+    expect(observation?.swedishName).toBeNull()
+  })
+
   it('fetches all pages without capping and starts multiple page requests in parallel', async () => {
     const totalFeatures = 25000
     const features = Array.from({ length: totalFeatures }, (_, index) => ({
